@@ -1,0 +1,59 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: devoxx2021-cluster
+  region: eu-west-1
+  version: "1.18" # Upper versions available in the console (1.21) but not here...
+
+iam:
+  withOIDC: true
+
+vpc:
+  subnets:
+    private:
+      eu-west-1a: { id: subnet-02d60a5a36afd714d }
+      eu-west-1b: { id: subnet-07224f6fd65b3f796 }
+      eu-west-1c: { id: subnet-0eb0128a20a19f2c8 }
+
+nodeGroups:
+  - name: ng-1-workers
+    labels: { role: workers }
+    instanceType: t3.medium
+    desiredCapacity: 1
+    privateNetworking: true
+    ssh: # import public key from file
+      publicKeyPath: ~/.ssh/id_rsa.pub
+    iam:
+      withAddonPolicies:
+        albIngress: true
+        autoScaler: true
+        cloudWatch: true
+  - name: ng-2-builders
+    labels: { role: builders }
+    minSize: 2
+    maxSize: 5
+    instancesDistribution:
+      maxPrice: 0.017
+      instanceTypes: ["t3.small", "t3.medium"] # At least one instance type should be specified
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 50
+      spotInstancePools: 2
+    desiredCapacity: 2
+    privateNetworking: true
+    ssh: # import default public key (~/.ssh/id_rsa.pub)
+      allow: true
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+
+# managedNodeGroups:
+#   - name: spot
+#     instanceTypes: ["c3.large","c4.large","c5.large","c5d.large","c5n.large","c5a.large"]
+#     spot: true
+
+addons:
+  - name: coredns
+    # version: latest # auto discovers the latest available
+  - name: kube-proxy
+    # version: latest
