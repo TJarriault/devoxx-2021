@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: world
-        image: world:1.0.1
+        image: WORLD_IMG
         ports:
         - containerPort: 3000
         env:

@@ -12,13 +12,33 @@ aws iam create-role \
   --output text \
   --query 'Role.Arn'
 
-
-
 go get -u -v sigs.k8s.io/aws-iam-authenticator/cmd/aws-iam-authenticator
 
 export AWS_REGION='eu-west-1'
 export EKS_CLUSTER_NAME='devoxx2021-cluster'
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
+
+eksctl create cluster --auto-kubeconfig  -f aws-cluster-eks.yaml
 
 # Check IP on Security Groups
-
 aws eks --region $AWS_REGION  update-kubeconfig --name  $EKS_CLUSTER_NAME
+
+aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+aws ecr create-repository --repository-name devoxx2021/hello --image-scanning-configuration scanOnPush=true --image-tag-mutability IMMUTABLE
+aws ecr create-repository --repository-name devoxx2021/devoxx --image-scanning-configuration scanOnPush=true --image-tag-mutability IMMUTABLE
+aws ecr create-repository --repository-name devoxx2021/world --image-scanning-configuration scanOnPush=true --image-tag-mutability IMMUTABLE
+
+sudo docker tag hello:1.0.16 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/devoxx2021/hello:1.0.16
+sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/devoxx2021/hello:1.0.16
+sudo docker tag devoxx:1.0.3 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/devoxx2021/devoxx:1.0.3
+sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/devoxx2021/devoxx:1.0.3
+sudo docker tag world:1.0.1 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/devoxx2021/world:1.0.1
+sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/devoxx2021/world:1.0.1
+
+sed "s/HELLO_IMG/$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com\/devoxx2021\/hello:1.0.16/g" docker/hello.yaml > aws/k8s/hello.yaml
+sed "s/DEVOXX_IMG/$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com\/devoxx2021\/devoxx:1.0.3/g" docker/devoxx.yaml > aws/k8s/devoxx.yaml
+sed "s/WORLD_IMG/$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com\/devoxx2021\/world:1.0.1/g" docker/world.yaml > aws/k8s/world.yaml
+
+kubectl apply -f aws/k8s
+
+# eksctl delete cluster -f aws/aws-cluster-eks.yaml
