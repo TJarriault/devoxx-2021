@@ -1,0 +1,22 @@
+steps:
+# Uses the docker build step to build an image called ${_IMAGE_NAME}
+- name: 'gcr.io/cloud-builders/docker'
+  env:
+  - 'BUILD=$BUILD_ID'
+  - 'PROJECT_ID=$PROJECT_ID'
+  - 'REV=$REVISION_ID'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}', '${_DOCKERFILE_PATH}']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}', '--region', '${_REGION}', '--platform', 'managed']
+substitutions:
+  _IMAGE_NAME: hello # default value
+  _SERVICE_NAME: hello
+  _DOCKERFILE_PATH: docker/hello
+  _REGION: europe-west2
+images:
+- 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
