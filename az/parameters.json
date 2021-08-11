@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "value": "devoxx-aks"
+        },
+        "location": {
+            "value": "francecentral"
+        },
+        "dnsPrefix": {
+            "value": "devoxx-aks-dns"
+        },
+        "kubernetesVersion": {
+            "value": "1.20.7"
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "enableRBAC": {
+            "value": true
+        },
+        "adminGroupObjectIDs": {
+            "value": []
+        },
+        "enablePrivateCluster": {
+            "value": false
+        },
+        "enableHttpApplicationRouting": {
+            "value": true
+        },
+        "enableAzurePolicy": {
+            "value": false
+        },
+        "vmssNodePool": {
+            "value": true
+        },
+        "vnetSubnetID": {
+            "value": "/subscriptions/6e7714be-1737-4ac4-9c66-6f414f8a91bc/resourceGroups/devoxx-2021/providers/Microsoft.Network/virtualNetworks/devoxx-2021-vnet/subnets/default"
+        },
+        "serviceCidr": {
+            "value": "10.0.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.0.0.10"
+        },
+        "dockerBridgeCidr": {
+            "value": "172.17.0.1/16"
+        },
+        "workspaceName": {
+            "value": "DefaultWorkspace-6e7714be-1737-4ac4-9c66-6f414f8a91bc-WEU"
+        },
+        "omsWorkspaceId": {
+            "value": "/subscriptions/6e7714be-1737-4ac4-9c66-6f414f8a91bc/resourcegroups/defaultresourcegroup-weu/providers/microsoft.operationalinsights/workspaces/defaultworkspace-6e7714be-1737-4ac4-9c66-6f414f8a91bc-weu"
+        },
+        "workspaceRegion": {
+            "value": "westeurope"
+        },
+        "networkPolicy": {
+            "value": "azure"
+        },
+        "acrName": {
+            "value": "devoxxTestOdu"
+        },
+        "acrResourceGroup": {
+            "value": "devoxx-2021"
+        },
+        "authorizedIPRanges": {
+            "value": [
+                "91.170.22.220"
+            ]
+        }
+    }
+}
