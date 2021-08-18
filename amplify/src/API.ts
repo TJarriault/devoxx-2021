@@ -1,19 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import awsconfig from './aws-exports';
-Amplify.configure(awsconfig);
 
 export type CreateTodoInput = {
   id?: string | null,
   name: string,
   description?: string | null,
+  priority?: string | null,
 };
 
 export type ModelTodoConditionInput = {
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
+  priority?: ModelStringInput | null,
   and?: Array< ModelTodoConditionInput | null > | null,
   or?: Array< ModelTodoConditionInput | null > | null,
   not?: ModelTodoConditionInput | null,
@@ -64,6 +63,7 @@ export type Todo = {
   id: string,
   name: string,
   description?: string | null,
+  priority?: string | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -72,6 +72,7 @@ export type UpdateTodoInput = {
   id: string,
   name?: string | null,
   description?: string | null,
+  priority?: string | null,
 };
 
 export type DeleteTodoInput = {
@@ -82,6 +83,7 @@ export type ModelTodoFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
+  priority?: ModelStringInput | null,
   and?: Array< ModelTodoFilterInput | null > | null,
   or?: Array< ModelTodoFilterInput | null > | null,
   not?: ModelTodoFilterInput | null,
@@ -120,6 +122,7 @@ export type CreateTodoMutation = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -136,6 +139,7 @@ export type UpdateTodoMutation = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -152,6 +156,7 @@ export type DeleteTodoMutation = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -167,6 +172,7 @@ export type GetTodoQuery = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -186,6 +192,7 @@ export type ListTodosQuery = {
       id: string,
       name: string,
       description?: string | null,
+      priority?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -199,6 +206,7 @@ export type OnCreateTodoSubscription = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -210,6 +218,7 @@ export type OnUpdateTodoSubscription = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -221,6 +230,7 @@ export type OnDeleteTodoSubscription = {
     id: string,
     name: string,
     description?: string | null,
+    priority?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
